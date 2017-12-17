@@ -1,0 +1,25 @@
+{
+  "name": "@tradle/iot-message",
+  "version": "1.0.0",
+  "description": "encode/decode Tradle Iot message",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test",
+    "prepush": "npm test"
+  },
+  "keywords": [
+    "tradle",
+    "iot"
+  ],
+  "author": "Mark Vayngrib <mark@tradle.io>",
+  "license": "MIT",
+  "dependencies": {
+    "co": "^4.6.0",
+    "pify": "^3.0.0",
+    "protocol-buffers": "^3.2.1"
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "tape": "^4.8.0"
+  }
+}
