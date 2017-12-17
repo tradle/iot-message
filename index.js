@@ -1,7 +1,7 @@
 const co = require('co')
 const promisify = require('pify')
 const zlib = promisify(require('zlib'))
-const { version } = require('./package')
+const { version } = require('./package.json')
 const {
   Headers,
   Message,
