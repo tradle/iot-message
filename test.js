@@ -20,6 +20,14 @@ test('encode/decode', wrap(function* (t) {
   const decoded = yield decode(encoded)
   t.same(JSON.parse(decoded), payload)
   t.same(decoded, yield decode(encoded.toString('base64')))
+
+  const encodedIdentity = yield encode({
+    payload,
+    encoding: 'identity'
+  })
+
+  t.notSame(encoded, encodedIdentity)
+  t.same(decoded, yield decode(encodedIdentity))
   t.end()
 }))
 

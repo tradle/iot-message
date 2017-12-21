@@ -13,6 +13,10 @@ const encode = co.wrap(function* ({ payload, encoding='gzip' }) {
     payload = JSON.stringify(payload)
   }
 
+  if (!(encoding in ContentEncoding)) {
+    throw new Error(`encoding ${encoding} is not supported`)
+  }
+
   switch (encoding) {
     case 'gzip':
       payload = yield zlib.gzip(payload)
@@ -26,7 +30,7 @@ const encode = co.wrap(function* ({ payload, encoding='gzip' }) {
   return Message.encode({
     headers: {
       version,
-      contentEncoding: ContentEncoding.gzip
+      contentEncoding: ContentEncoding[encoding]
     },
     body: payload
   })
