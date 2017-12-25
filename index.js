@@ -37,12 +37,16 @@ const encode = co.wrap(function* ({ payload, encoding='gzip' }) {
   })
 })
 
-const decode = co.wrap(function* (payload) {
+const decodeRaw = payload => {
   if (typeof payload === 'string') {
     payload = new Buffer(payload, 'base64')
   }
 
-  const { headers, body } = Message.decode(payload)
+  return Message.decode(payload)
+}
+
+const getBody = co.wrap(function* (decoded) {
+  const { headers, body } = decoded
   if (headers.contentEncoding === ContentEncoding.gzip) {
     return yield zlib.gunzip(body)
   }
@@ -50,8 +54,12 @@ const decode = co.wrap(function* (payload) {
   return body
 })
 
+const decode = payload => getBody(decodeRaw(payload))
+
 module.exports = {
   encode,
   decode,
+  decodeRaw,
+  getBody,
   version
 }
