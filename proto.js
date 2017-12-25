@@ -10,6 +10,8 @@ module.exports = require('protocol-buffers')(`
   message Headers {
     required string version = 1;
     required ContentEncoding contentEncoding = 2;
+    // when this message was sent (over the network)
+    optional int64 date = 3;
   }
 
   message Message {

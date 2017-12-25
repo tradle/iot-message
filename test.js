@@ -1,11 +1,15 @@
 const co = require('co')
 const test = require('tape')
+const sinon = require('sinon')
 const { encode, decode } = require('./')
 
 test('encode/decode', wrap(function* (t) {
   const payload = {
     some: 'thing'
   }
+
+  const now = Date.now()
+  const stubNow = sinon.stub(Date, 'now').returns(now)
 
   const encoded = yield encode({ payload })
   t.same(encoded, yield encode({

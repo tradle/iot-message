@@ -30,7 +30,8 @@ const encode = co.wrap(function* ({ payload, encoding='gzip' }) {
   return Message.encode({
     headers: {
       version,
-      contentEncoding: ContentEncoding[encoding]
+      contentEncoding: ContentEncoding[encoding],
+      date: Date.now()
     },
     body: payload
   })
