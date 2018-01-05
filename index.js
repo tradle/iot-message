@@ -2,12 +2,13 @@ const co = require('co')
 const promisify = require('pify')
 const zlib = promisify(require('zlib'))
 const { version } = require('./package.json')
+const protobuf = require('./proto')
 const {
   Headers,
   MessageType,
   Message,
   ContentEncoding
-} = require('./proto')
+} = protobuf
 
 const encode = co.wrap(function* ({ type='messages', payload, encoding='gzip' }) {
   if (!(typeof payload === 'string' || Buffer.isBuffer(payload))) {
@@ -63,5 +64,6 @@ module.exports = {
   decode,
   decodeRaw,
   getBody,
-  version
+  version,
+  protobuf
 }
