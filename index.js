@@ -10,7 +10,7 @@ const {
   ContentEncoding
 } = protobuf
 
-const encode = co.wrap(function* ({ type='messages', payload, encoding='gzip' }) {
+const encode = co.wrap(function* ({ type='messages', encoding='gzip', payload }) {
   if (!(typeof payload === 'string' || Buffer.isBuffer(payload))) {
     payload = JSON.stringify(payload)
   }
@@ -30,7 +30,7 @@ const encode = co.wrap(function* ({ type='messages', payload, encoding='gzip' })
   }
 
   return Message.encode({
-    type: MessageType[type],
+    type: typeof type === 'number' ? type : MessageType[type],
     headers: {
       version,
       contentEncoding: ContentEncoding[encoding],
@@ -48,6 +48,13 @@ const decodeRaw = payload => {
   return Message.decode(payload)
 }
 
+const keyByValue = (obj, value) => {
+  for (let key in obj) {
+    let candidate = obj[key]
+    if (candidate === value) return key
+  }
+}
+
 const getBody = co.wrap(function* (decoded) {
   const { headers, body } = decoded
   if (headers.contentEncoding === ContentEncoding.gzip) {
@@ -57,7 +64,20 @@ const getBody = co.wrap(function* (decoded) {
   return body
 })
 
-const decode = payload => getBody(decodeRaw(payload))
+const decode = co.wrap(function* (payload, opts={}) {
+  const decoded = decodeRaw(payload)
+  if (opts.decodeBody !== false) {
+    decoded.body = yield getBody(decoded)
+  }
+
+  decoded.type = keyByValue(MessageType, decoded.type)
+  const enc = decoded.headers.contentEncoding
+  if (enc) {
+    decoded.headers.contentEncoding = keyByValue(ContentEncoding, enc)
+  }
+
+  return decoded
+})
 
 module.exports = {
   encode,
