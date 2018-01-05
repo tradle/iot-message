@@ -1,4 +1,9 @@
 module.exports = require('protocol-buffers')(`
+  enum MessageType {
+    messages = 1;
+    announcePosition = 2;
+  }
+
   enum ContentEncoding {
     gzip = 1;
     compress = 2;
@@ -17,5 +22,6 @@ module.exports = require('protocol-buffers')(`
   message Message {
     required Headers headers = 1;
     required bytes body = 2;
+    required MessageType type = 3;
   }
 `)

@@ -4,11 +4,12 @@ const zlib = promisify(require('zlib'))
 const { version } = require('./package.json')
 const {
   Headers,
+  MessageType,
   Message,
   ContentEncoding
 } = require('./proto')
 
-const encode = co.wrap(function* ({ payload, encoding='gzip' }) {
+const encode = co.wrap(function* ({ type='messages', payload, encoding='gzip' }) {
   if (!(typeof payload === 'string' || Buffer.isBuffer(payload))) {
     payload = JSON.stringify(payload)
   }
@@ -28,6 +29,7 @@ const encode = co.wrap(function* ({ payload, encoding='gzip' }) {
   }
 
   return Message.encode({
+    type: MessageType[type],
     headers: {
       version,
       contentEncoding: ContentEncoding[encoding],
